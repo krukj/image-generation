@@ -71,6 +71,7 @@ def compute_metrics(real_path: str | Path, fake_path: str | Path) -> dict:
         fid=True,
         prc=True,
         prc_neighborhood_k=5,
+        batch_size=32
     )
     return {
         "fid": round(metrics["frechet_inception_distance"], 4),

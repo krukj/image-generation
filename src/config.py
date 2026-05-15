@@ -15,7 +15,7 @@ DCGAN_DEFAULT = {
     "batch_size": 128,
     "lr": 0.0002,
     "beta": 0.5,
-    "num_epochs": 5,
+    "num_epochs": 50,
 }
 
 DCGAN_GRID = {"nz": [32, 128, 512], "d_to_g_ratio": [2, 3, 5]}

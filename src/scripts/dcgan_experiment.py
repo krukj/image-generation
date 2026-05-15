@@ -2,6 +2,7 @@ import json
 import time
 from pathlib import Path
 
+import gc
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -30,6 +31,13 @@ from src.scripts.utils import (
 device = torch.device("mps" if (torch.mps.is_available() and NGPU > 0) else "cpu")
 logger = setup_logger()
 
+
+def clear_memory():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    elif torch.backends.mps.is_available():
+        torch.mps.empty_cache()
 
 def _create_g_and_d(nz: int):
     netG = Generator(NGPU, nz=nz).to(device)
@@ -63,6 +71,7 @@ def _generate_fid_images(netG, nz, out_dir: Path, n: int = 2000):
                     out_dir / f"gen_{existing + batch_start + j:05d}.png",
                     normalize=True,
                 )
+    clear_memory()
 
 
 def _aggregate_seeds(exp_name: str, results: list[dict]) -> dict:
@@ -70,7 +79,7 @@ def _aggregate_seeds(exp_name: str, results: list[dict]) -> dict:
     agg = {
         "exp_name": exp_name,
         "n_seeds": len(results),
-        "hparams": results[0]["hparams"],
+        "params": results[0]["params"],
     }
     for k in keys:
         vals = [r["final_metrics"].get(k, float("nan")) for r in results]
@@ -108,10 +117,15 @@ def run_single_experiment(
     dataroot: Path,
     real_path: Path,
     results_root: Path,
-    metrics_every_n: int = 10,
 ) -> dict:
     set_seed(seed)
     run_dir = results_root / exp_name / f"seed{seed}"
+    metrics_path = run_dir / "metrics.json"
+    if metrics_path.exists():
+        logger.info(f"Skipping {exp_name}/seed{seed} — already done")
+        with open(metrics_path) as f:
+            return json.load(f)
+        
     images_dir = run_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
@@ -202,18 +216,18 @@ def run_single_experiment(
             iters += 1
 
         save_images(netG, fixed_noise, images_dir, tag=f"epoch{epoch:03d}")
-        last_epoch = epoch == num_epochs - 1
-        if epoch % metrics_every_n == 0 or last_epoch:
-            logger.info("Calculating metrics")
-            singles_dir = images_dir / f"epoch{epoch:03d}" / "singles"
-            _generate_fid_images(netG, nz, singles_dir, n=2000)
-            metrics = compute_metrics(real_path, singles_dir)
-            metrics["epoch"] = epoch
-            metrics_history.append(metrics)
-            print(
-                f"FID={metrics['fid']} | IS={metrics['is_mean']}±{metrics['is_std']} | "
-                f"P={metrics['precision']} | R={metrics['recall']}"
-            )
+
+    logger.info("Calculating metrics")
+    singles_dir = images_dir / f"epoch{epoch:03d}" / "singles"
+    _generate_fid_images(netG, nz, singles_dir, n=2000)
+    metrics = compute_metrics(real_path, singles_dir)
+    metrics["epoch"] = epoch
+    metrics_history.append(metrics)
+    print(
+        f"FID={metrics['fid']} | IS={metrics['is_mean']}±{metrics['is_std']} | "
+        f"P={metrics['precision']} | R={metrics['recall']}"
+    )
+    clear_memory()
 
     result = {
         "exp_name": exp_name,
@@ -254,7 +268,6 @@ def run_dcgan_experiment(
     real_path: str | Path = Path(DATA_PROCESSED_TORCH_DIR),
     results_root: str | Path = Path(RESULTS_PATH),
     exp_name: str | None = None,
-    metrics_every_n: int = 10,
 ) -> list[dict]:
 
     if exp_name is None:
@@ -278,18 +291,17 @@ def run_dcgan_experiment(
             dataroot=Path(dataroot),
             real_path=Path(real_path),
             results_root=results_root,
-            metrics_every_n=metrics_every_n,
         )
         all_results.append(r)
 
     summary_entry = _aggregate_seeds(exp_name, all_results)
-    _update_summary(results_root / "summary.json", summary_entry)
+    _update_summary(results_root / f"summary_{exp_name}.json", summary_entry)
 
     return all_results
 
 
 def main():
-    REAL_PATH = DATA_PROCESSED_TORCH_DIR / "cats"
+    REAL_PATH = Path(DATA_PROCESSED_TORCH_DIR)/ "cats"
     SEEDS = [1, 2, 3]
 
     run_dcgan_experiment(
