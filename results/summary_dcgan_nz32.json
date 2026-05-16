@@ -1,0 +1,21 @@
+[
+  {
+    "exp_name": "dcgan_nz32",
+    "n_seeds": 3,
+    "params": {
+      "lr": 0.0002,
+      "beta": 0.5,
+      "nz": 32,
+      "d_to_g_ratio": 1,
+      "num_epochs": 50
+    },
+    "fid_mean": 91.2363,
+    "fid_std": 6.5409,
+    "is_mean_mean": 3.1492,
+    "is_mean_std": 0.161,
+    "precision_mean": 0.543,
+    "precision_std": 0.0569,
+    "recall_mean": 0.023,
+    "recall_std": 0.0092
+  }
+]

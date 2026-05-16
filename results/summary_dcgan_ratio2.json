@@ -1,0 +1,21 @@
+[
+  {
+    "exp_name": "dcgan_ratio2",
+    "n_seeds": 3,
+    "params": {
+      "lr": 0.0002,
+      "beta": 0.5,
+      "nz": 128,
+      "d_to_g_ratio": 2,
+      "num_epochs": 50
+    },
+    "fid_mean": 79.4799,
+    "fid_std": 3.4763,
+    "is_mean_mean": 2.8773,
+    "is_mean_std": 0.0657,
+    "precision_mean": 0.6102,
+    "precision_std": 0.0564,
+    "recall_mean": 0.0189,
+    "recall_std": 0.0092
+  }
+]
