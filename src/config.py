@@ -18,4 +18,20 @@ DCGAN_DEFAULT = {
     "num_epochs": 50,
 }
 
-DCGAN_GRID = {"nz": [32, 128, 512], "d_to_g_ratio": [2, 3, 5]}
+DCGAN_GRID = {"nz": [32, 512], "d_to_g_ratio": [2, 3, 5]}
+
+
+DDIM_DEFAULT = {
+    "batch_size": 32,
+    "lr": 0.0002,
+    "num_epochs": 50,
+    "lr_warmup_steps": 10,
+    "num_train_timesteps": 1000,
+    "beta_schedule": "linear",
+}
+
+
+DDIM_GRID = {
+    "num_train_timesteps": [500, 2000],
+    "beta_schedule": ["squaredcos_cap_v2"],
+}

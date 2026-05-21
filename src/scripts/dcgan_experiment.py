@@ -1,8 +1,8 @@
+import gc
 import json
 import time
 from pathlib import Path
 
-import gc
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -10,23 +10,11 @@ import torchvision.transforms as transforms
 import torchvision.utils as vutils
 from torchvision.datasets import ImageFolder
 
-from src.config import (
-    DATA_PROCESSED_TORCH_DIR,
-    DCGAN_DEFAULT,
-    DCGAN_GRID,
-    NGPU,
-    RESULTS_PATH,
-    TARGET_SIZE,
-    WORKERS,
-)
+from src.config import (DATA_PROCESSED_TORCH_DIR, DCGAN_DEFAULT, DCGAN_GRID,
+                        NGPU, RESULTS_PATH, TARGET_SIZE, WORKERS)
 from src.models.dcgan import Discriminator, Generator
-from src.scripts.utils import (
-    compute_metrics,
-    save_images,
-    set_seed,
-    setup_logger,
-    weights_init,
-)
+from src.scripts.utils import (compute_metrics, save_images, set_seed,
+                               setup_logger, weights_init)
 
 device = torch.device("mps" if (torch.mps.is_available() and NGPU > 0) else "cpu")
 logger = setup_logger()
@@ -304,13 +292,13 @@ def main():
     REAL_PATH = Path(DATA_PROCESSED_TORCH_DIR)/ "cats"
     SEEDS = [1, 2, 3]
 
-    run_dcgan_experiment(
-        exp_name="dcgan_default",
-        nz=DCGAN_DEFAULT.get("nz"),
-        d_to_g_ratio=DCGAN_DEFAULT.get("d_to_g_ratio"),
-        seeds=SEEDS,
-        real_path=REAL_PATH,
-    )
+    # run_dcgan_experiment(
+    #     exp_name="dcgan_default",
+    #     nz=DCGAN_DEFAULT.get("nz"),
+    #     d_to_g_ratio=DCGAN_DEFAULT.get("d_to_g_ratio"),
+    #     seeds=SEEDS,
+    #     real_path=REAL_PATH,
+    # )
 
     # for nz in DCGAN_GRID.get("nz"):
     #     run_dcgan_experiment(
@@ -321,14 +309,14 @@ def main():
     #         real_path=REAL_PATH,
     #     )
 
-    # for ratio in DCGAN_GRID.get("d_to_g_ratio"):
-    #     run_dcgan_experiment(
-    #         exp_name=f"dcgan_ratio{ratio}",
-    #         nz=DCGAN_DEFAULT.get("nz"),
-    #         d_to_g_ratio=ratio,
-    #         seeds=SEEDS,
-    #         real_path=REAL_PATH,
-    #     )
+    for ratio in DCGAN_GRID.get("d_to_g_ratio"):
+        run_dcgan_experiment(
+            exp_name=f"dcgan_ratio{ratio}",
+            nz=DCGAN_DEFAULT.get("nz"),
+            d_to_g_ratio=ratio,
+            seeds=SEEDS,
+            real_path=REAL_PATH,
+        )
 
 
 if __name__ == "__main__":
