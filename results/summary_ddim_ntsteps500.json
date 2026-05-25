@@ -1,0 +1,20 @@
+[
+  {
+    "exp_name": "ddim_ntsteps500",
+    "n_seeds": 3,
+    "params": {
+      "lr": 0.0002,
+      "beta_schedule": "linear",
+      "num_train_timesteps": 500,
+      "num_epochs": 50
+    },
+    "fid_mean": 110.8078,
+    "fid_std": 2.796,
+    "is_mean_mean": 2.3494,
+    "is_mean_std": 0.1384,
+    "precision_mean": 0.6562,
+    "precision_std": 0.0313,
+    "recall_mean": 0.0,
+    "recall_std": 0.0
+  }
+]
