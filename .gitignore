@@ -217,3 +217,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+results/dcgan_default/*/images/
+results/dcgan_nz32/*/images/
+results/dcgan_nz512/*/images/
+results/dcgan_ratio2/*/images/
+results/dcgan_ratio3/*/images/
+results/dcgan_ratio5/*/images/
+results/ddim_*/**/images/
