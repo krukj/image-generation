@@ -225,6 +225,9 @@ results/dcgan_nz512/*/images/
 results/dcgan_ratio2/*/images/
 results/dcgan_ratio3/*/images/
 results/dcgan_ratio5/*/images/
+results/dcgan_g_to_d_ratio2/*/images/
+results/dcgan_g_to_d_ratio3/*/images/
+results/dcgan_g_to_d_ratio5/*/images/
 results/ddim_betassquaredcos_cap_v2/*/images/
 results/ddim_default/*/images/
 results/ddim_ntsteps500/*/images/
