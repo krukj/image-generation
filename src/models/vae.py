@@ -45,10 +45,10 @@ class VAEDecoder(nn.Module):
 
 
 class VAE(nn.Module):
-    def __init__(self):
+    def __init__(self, dim_latent: int):
         super().__init__()
-        self.encoder = VAEEncoder()
-        self.decoder = VAEDecoder()
+        self.encoder = VAEEncoder(dim_latent=dim_latent)
+        self.decoder = VAEDecoder(dim_latent=dim_latent)
 
     def reparametrize(self, mu, log_sigma):
         sigma = torch.exp(0.5 * log_sigma)
