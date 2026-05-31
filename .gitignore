@@ -239,3 +239,4 @@ results/vae_latent64/*/images
 results/vae_latent256/*/images
 
 *.pt
+*.DS_Store
