@@ -1,0 +1,20 @@
+[
+  {
+    "exp_name": "vae_beta4.0",
+    "n_seeds": 3,
+    "params": {
+      "dim_latent": 128,
+      "beta": 4.0,
+      "lr": 0.001,
+      "num_epochs": 150
+    },
+    "fid_mean": 188.6623,
+    "fid_std": 5.5269,
+    "is_mean_mean": 3.304,
+    "is_mean_std": 0.1029,
+    "precision_mean": 0.9565,
+    "precision_std": 0.0084,
+    "recall_mean": 0.0,
+    "recall_std": 0.0
+  }
+]
